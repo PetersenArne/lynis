@@ -1579,13 +1579,15 @@
             LogText "Test: Checking FAILLOG_ENAB option in ${ROOTDIR}etc/login.defs "
             FIND=$(${GREPBINARY} "^FAILLOG_ENAB" ${ROOTDIR}etc/login.defs | ${AWKBINARY} '{ if ($1=="FAILLOG_ENAB") { print $2 } }')
             # Search for enabled status (yes), otherwise consider it to be disabled (e.g. empty, or other value)
+            if [ "${FIND}" = "yes" ]; then
             AUTH_FAILED_LOGINS_LOGGED=1
-            Report "auth_failed_logins_tooling[]=/etc/login.defs"
-            LogText "Result: FAILLOG_ENAB is set to 'yes'"
-            LogText "Outcome: failed login attempts are logged in ${ROOTDIR}var/log/faillog"
+                Report "auth_failed_logins_tooling[]=/etc/login.defs"
+                LogText "Result: FAILLOG_ENAB is set to 'yes'"
+                LogText "Outcome: failed login attempts are logged in ${ROOTDIR}var/log/faillog"
+            fi
         fi
 
-        if [ "${AUTH_FAILED_LOGINS_LOGGED}" = "yes" ]; then
+        if [ ${AUTH_FAILED_LOGINS_LOGGED} -eq 1 ]; then
             Display --indent 2 --text "- Logging failed login attempts" --result "${STATUS_ENABLED}" --color GREEN
         else
             LogText "Result: failed login attempts may not logged"
