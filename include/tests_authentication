@@ -1528,7 +1528,7 @@
 #
     # Test        : AUTH-9408
     # Description : Logging of failed login attempts
-    Register --test-no AUTH-9408 --weight L --network NO --category security --description "Logging of failed login attempts"
+    Register --test-no AUTH-9408 --weight L --network NO --category security --description "Logging of failed login attempts" 
     if [ ${SKIPTEST} -eq 0 ]; then
         if [ -f "${ROOTDIR}etc/pam.conf" -o -d "${ROOTDIR}etc/pam.d" ]; then
             FOUND_PAM_TALLY2=0
@@ -1579,23 +1579,24 @@
             LogText "Test: Checking FAILLOG_ENAB option in ${ROOTDIR}etc/login.defs "
             FIND=$(${GREPBINARY} "^FAILLOG_ENAB" ${ROOTDIR}etc/login.defs | ${AWKBINARY} '{ if ($1=="FAILLOG_ENAB") { print $2 } }')
             # Search for enabled status (yes), otherwise consider it to be disabled (e.g. empty, or other value)
-            if [ "${FIND}" = "yes" ]; then
-                AUTH_FAILED_LOGINS_LOGGED=1
-                Report "auth_failed_logins_tooling[]=/etc/login.defs"
-                LogText "Result: FAILLOG_ENAB is set to 'yes'"
-                LogText "Outcome: failed login attempts are logged in ${ROOTDIR}var/log/faillog"
-                Display --indent 2 --text "- Logging failed login attempts" --result "${STATUS_ENABLED}" --color GREEN
-            else
-                LogText "Result: failed login attempts may not logged"
-                Display --indent 2 --text "- Logging failed login attempts" --result "${STATUS_DISABLED}" --color YELLOW
-            fi
+            AUTH_FAILED_LOGINS_LOGGED=1
+            Report "auth_failed_logins_tooling[]=/etc/login.defs"
+            LogText "Result: FAILLOG_ENAB is set to 'yes'"
+            LogText "Outcome: failed login attempts are logged in ${ROOTDIR}var/log/faillog"
+        fi
+
+        if [ "${AUTH_FAILED_LOGINS_LOGGED}" = "yes" ]; then
+            Display --indent 2 --text "- Logging failed login attempts" --result "${STATUS_ENABLED}" --color GREEN
+        else
+            LogText "Result: failed login attempts may not logged"
+            Display --indent 2 --text "- Logging failed login attempts" --result "${STATUS_DISABLED}" --color YELLOW
         fi
 
         if [ ${AUTH_FAILED_LOGINS_LOGGED} -eq 1 ]; then
             AddHP 3 3
         else
             AddHP 0 1
-            #ReportSuggestion "${TEST_NO}" "Configure failed login attempts to be logged using pam_tally2 or /etc/login.defs"
+            ReportSuggestion "${TEST_NO}" "Configure failed login attempts to be logged using pam_tally2, pam_faillock or /etc/login.defs"
         fi
     fi
 #
