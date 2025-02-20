@@ -767,6 +767,18 @@
                         # /boot/kernel-genkernel-x86_64-3.14.14-gentoo
                         KERNELS=$(${LSBINARY} ${ROOTDIR}boot/kernel* | ${AWKBINARY} -F- '{ if ($2=="genkernel") { print $4 }}' | ${GREPBINARY} "^[0-9]" | ${SORTBINARY} -n -k1,1 -k2,2 -k3,3 -k4,4 -k5,5 -k6,6 -t \.)
                         if [ -n "${KERNELS}" ]; then LogText "Output: ${KERNELS}"; fi
+                    elif [ ! "$(ls ${ROOTDIR}boot/uImage-* 2> /dev/null)" = "" ]; then
+                        LogText "Output: Found a uImage kernel file in ${ROOTDIR}boot"
+                        # Extract version numbers from uImage files
+                        # Example: uImage-6.1.54-rt15-v7l
+                        KERNELS=$(${LSBINARY} ${ROOTDIR}boot/uImage-* | \
+                            ${AWKBINARY} -F- '{ if ($1 ~ /uImage/) { print $2 }}' | \
+                            ${GREPBINARY} "^[0-9]" | \
+                            ${SORTBINARY} -n -k1,1 -k2,2 -k3,3 -k4,4 -k5,5 -k6,6 -t \.)
+
+                        if [ -n "${UIMAGE_KERNELS}" ]; then 
+                            LogText "Output: ${UIMAGE_KERNELS}"
+                        fi
                     else
                         ReportException "${TEST_NO}:2" "Can not find any vmlinuz or kernel files in /boot, which is unexpected"
                     fi
