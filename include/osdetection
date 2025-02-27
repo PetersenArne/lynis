@@ -329,6 +329,11 @@
                             OS_NAME="Koozali SME Server"
                             OS_REDHAT_OR_CLONE=1
                             OS_VERSION=$(grep "^VERSION_ID=" /etc/os-release | awk -F= '{print $2}' | tr -d '"')
+                                                ;;
+                        "ken")
+                            LINUX_VERSION="ken"
+                            OS_NAME="Kendrion Linux (Yocto Project Distro)"
+                            OS_VERSION=$(grep "^VERSION_ID=" /etc/os-release | awk -F= '{print $2}' | tr -d '"')
                         ;;
                         "linuxmint")
                             LINUX_VERSION="Linux Mint"
