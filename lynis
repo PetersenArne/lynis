@@ -300,7 +300,7 @@
 #################################################################################
 #
     # CV - Current Version
-    PROGRAM_AC=$(echo ${PROGRAM_VERSION} | awk '{ print $1 }' | sed 's/[.]//g')
+    PROGRAM_AC=$(echo ${PROGRAM_VERSION} | awk '{ print $1 }' | sed 's/[.]//g' | sed 's/+.*//')
     PROGRAM_LV=0
 #
 #################################################################################
