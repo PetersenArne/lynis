@@ -776,8 +776,8 @@
                             ${GREPBINARY} "^[0-9]" | \
                             ${SORTBINARY} -n -k1,1 -k2,2 -k3,3 -k4,4 -k5,5 -k6,6 -t \.)
 
-                        if [ -n "${UIMAGE_KERNELS}" ]; then 
-                            LogText "Output: ${UIMAGE_KERNELS}"
+                        if [ -n "${KERNELS}" ]; then 
+                            LogText "Output: ${KERNELS}"
                         fi
                     else
                         ReportException "${TEST_NO}:2" "Can not find any vmlinuz or kernel files in /boot, which is unexpected"

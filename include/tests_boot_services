@@ -289,6 +289,23 @@
 #
 #################################################################################
 #
+    # Test        : BOOT-5118
+    # Description : Check for u-boot boot loader
+    Register --test-no BOOT-5118 --os Linux --weight L --network NO --category security --description "Check for u-boot boot loader presence"
+    if [ ${SKIPTEST} -eq 0 ]; then
+        BOOT_LOADER_SEARCHED=1
+        if [ -f ${ROOTDIR}boot/uImage ]; then
+            LogText "Result: found uImage in ${ROOTDIR}boot"
+            Display --indent 2 --text "- Checking presence of u-boot" --result "${STATUS_FOUND}" --color GREEN
+            BOOT_LOADER="u-boot"
+            BOOT_LOADER_FOUND=1
+        else
+            LogText "Result: uImage not found in ${ROOTDIR}boot"
+        fi
+    fi
+#
+#################################################################################
+#
     # Test        : BOOT-5121
     # Description : Check for GRUB boot loader
     Register --test-no BOOT-5121 --weight L --network NO --category security --description "Check for GRUB boot loader presence"
