@@ -55,6 +55,13 @@
                 LogText "Result: found firewire ohci driver in disabled state"
             fi
         fi
+        if [ -f "${ROOTDIR}proc/config.gz" ]; then
+            FIND=$(${ZCAT} ${ROOTDIR}proc/config.gz | ${GREPBINARY} "CONFIG_FIREWIRE is not set")
+            if [ -n "${FIND}" ]; then
+                FOUND=1
+                LogText "Result: found CONFIG_FIREWIRE is not set in config.gz"
+            fi
+        fi
 
         if [ ${FOUND} -eq 0 ]; then
             LogText "Result: firewire ohci driver is not explicitly disabled"
